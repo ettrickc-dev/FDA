@@ -228,3 +228,5 @@ textarea:focus-visible { outline: 3px solid #000; outline-offset: 2px; }
 .rec summary::after { content: '+'; font-size: 1.4rem; color: var(--accent); margin-left: 8px; }
 .rec[open] summary::after { content: '–'; }
 .btn.danger { background: var(--error); border-color: var(--error); color: #fff; }
+.legal ul { padding-left: 1.2em; }
+.counsel-flag { font-size: 0.88rem; background: var(--warn-bg); border-left: 4px solid var(--warn-line); padding: 6px 10px; border-radius: 6px; }

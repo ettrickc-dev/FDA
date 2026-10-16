@@ -2,6 +2,18 @@
 
 Do these yourself. Never paste keys into a chat.
 
+## Launch gates (spec Section 14 — yours, not the code's)
+- [ ] Ethics counsel sign-off in writing (Terms, Privacy, ad label, red-flag prompts, recommendations, consult link)
+- [ ] Malpractice and cyber insurance confirmed
+- [ ] Content review by a Family Court practitioner (help text, recommendations, next steps)
+- [ ] Security review
+- [ ] Privacy policy matches actual system behavior (`src/pages/LegalPages.jsx` was written to match it today)
+- [ ] 3–5 real-user tests on phones
+- [ ] Soft launch before marketing
+- [ ] Supabase email templates set from `docs/email-templates.md`; custom SMTP with a neutral sender
+- [ ] Attorney consultation link set in `src/config.js` (`ATTORNEY_CONSULT_URL`)
+- [ ] "Rules in effect on [date]" set on the Terms screen (`RULES_EFFECTIVE_DATE` in `src/config.js`)
+
 ## Before switching Stripe to live
 - [ ] Section 0 decided and set in Netlify (Production): `PRICE_CENTS`, `ACCESS_DAYS`, `REFUND_DAYS`,
       `DRAFT_RETENTION_DAYS`, `UPLOAD_RETENTION_DAYS`, `STRIPE_STATEMENT_DESCRIPTOR`.

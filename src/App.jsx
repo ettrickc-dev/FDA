@@ -4,6 +4,7 @@ import Account from './pages/Account.jsx';
 import DocumentsPage from './pages/DocumentsPage.jsx';
 import Home from './pages/Home.jsx';
 import Landing from './pages/Landing.jsx';
+import { PrivacyPolicy, TermsOfUse } from './pages/LegalPages.jsx';
 import CheckoutReturn from './pages/CheckoutReturn.jsx';
 import DeleteMyData from './pages/DeleteMyData.jsx';
 import DownloadPage from './pages/DownloadPage.jsx';
@@ -47,8 +48,8 @@ export default function App() {
       <Route path="/checkout/return" element={<CheckoutReturn />} />
       <Route path="/refunds" element={<RefundPolicy />} />
       <Route path="/delete-my-data" element={<DeleteMyData />} />
-      <Route path="/privacy" element={<Placeholder title="Privacy Policy" />} />
-      <Route path="/terms-of-use" element={<Placeholder title="Terms of Use" />} />
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/terms-of-use" element={<TermsOfUse />} />
       <Route path="*" element={<Placeholder title="Page not found" />} />
     </Routes>
   );
