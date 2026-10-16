@@ -8,7 +8,7 @@ const TYPE = ['new', 'modification', 'enforcement', 'unsure'];
 const GOAL = ['fair', 'reduce', 'increase', 'understand'];
 const COLS = 'id,status,form_type,role,case_type,goal,county,confidentiality_requested,last_step,created_at,updated_at';
 const STEPS = ['setup', 'safety', 'documents', 'info', 'job', 'other-income', 'household', 'other-orders',
-  'health', 'child-care', 'assets', 'expenses', 'debts', 'documents-final', 'review'];
+  'health', 'child-care', 'assets', 'expenses', 'debts', 'for-you', 'documents-final', 'review'];
 
 export default handler('cases', async (req) => {
   const user = await requireUser(req);

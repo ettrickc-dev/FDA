@@ -35,7 +35,7 @@ describe('checkbox logic', () => {
 
 describe('screen definitions', () => {
   it('every flow step has a page', () => {
-    const custom = ['safety', 'documents', 'documents-final', 'review'];
+    const custom = ['safety', 'documents', 'for-you', 'documents-final', 'review'];
     for (const s of FLOW) expect(custom.includes(s) || SCREENS[s]).toBeTruthy();
   });
   it('server step list matches the app flow', () => {

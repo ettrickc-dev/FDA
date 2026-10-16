@@ -351,13 +351,13 @@ export const SCREENS = {
 export const FLOW = [
   'setup', 'safety', 'documents',
   'info', 'job', 'other-income', 'household', 'other-orders', 'health', 'child-care', 'assets', 'expenses', 'debts',
-  'documents-final', 'review',
+  'for-you', 'documents-final', 'review',
 ];
 
 export const STEP_NAMES = {
   setup: 'Your situation', safety: 'A few more questions', documents: 'Papers to gather',
   info: 'Case information', job: 'Income from work', 'other-income': 'Other income', household: 'Household',
   'other-orders': 'Other support orders', health: 'Health insurance', 'child-care': 'Child care',
-  assets: 'What you own', expenses: 'Monthly expenses', debts: 'Loans and debt',
+  assets: 'What you own', expenses: 'Monthly expenses', debts: 'Loans and debt', 'for-you': 'Information for you',
   'documents-final': 'Check your papers', review: 'Review',
 };

@@ -6,6 +6,7 @@ import Home from './pages/Home.jsx';
 import Landing from './pages/Landing.jsx';
 import CheckoutReturn from './pages/CheckoutReturn.jsx';
 import DownloadPage from './pages/DownloadPage.jsx';
+import ForYouPage from './pages/ForYouPage.jsx';
 import RefundPolicy from './pages/RefundPolicy.jsx';
 import ReviewPage from './pages/ReviewPage.jsx';
 import UnlockPage from './pages/UnlockPage.jsx';
@@ -27,6 +28,7 @@ function CaseStep() {
   if (step === 'safety') return <SafetyPage />;
   if (step === 'documents') return <DocumentsPage />;
   if (step === 'documents-final') return <DocumentsPage final />;
+  if (step === 'for-you') return <ForYouPage />;
   if (step === 'review') return <ReviewPage />;
   if (step === 'unlock') return <UnlockPage />;
   if (step === 'download') return <DownloadPage />;
