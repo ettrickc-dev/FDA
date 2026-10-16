@@ -4,7 +4,7 @@ Mobile-first web app that helps people prepare NY Family Court Form 4-17a
 (Financial Disclosure Affirmation, Short Form). React + Vite on Netlify, Netlify Functions,
 Supabase (Postgres + Auth), Stripe Checkout (added in build step 6).
 
-**Build status:** step 2 of 9 complete (scaffold, database, login, encrypted save/resume, Screen 1).
+**Build status:** step 3 of 9 complete — scaffold, database, login, encrypted save/resume, all intake screens, red-flag screening, document checklist.
 
 ## How the pieces fit
 
@@ -80,3 +80,23 @@ third-party scripts (no analytics or trackers).
 - Netlify Identity was reversed from deprecation in Feb 2026; not used regardless.
 - Confidential address: when the user says sharing their address is a risk, the address is not
   collected and the form will print "Confidential – see GF-21 application."
+
+## Editing content (no coding needed beyond text)
+
+| What | File |
+|---|---|
+| Question screens, labels, order | `src/content/screens.js` |
+| "What counts here?" help text (ATTORNEY TO REVIEW) | `src/content/help.js` |
+| Red-flag questions, prompts, hotline numbers | `src/content/redFlags.js` |
+| Document checklist | `src/lib/checklist.js` |
+| Attorney name, ad label, links | `src/config.js` |
+
+`npm test` checks the hard rules (banned words, fee wording, no price before the paywall,
+no trackers) every time content changes.
+
+## Owner decisions recorded
+- Support email: ettrickc@gmail.com.
+- Confidential address prints "Confidential – see GF-21 application"; the address is not collected.
+- The "Print or type name" line under the signature is filled from the person's full legal name.
+  Signature and date stay blank.
+- Form template: 4-17a revision 1/2026 (`forms/`).

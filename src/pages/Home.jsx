@@ -27,7 +27,7 @@ export default function Home() {
   async function start() {
     try {
       const { case: c } = await api.createCase();
-      nav(`/case/${c.id}/info`, { replace: true });
+      nav(`/case/${c.id}/setup`, { replace: true });
     } catch (e) { setErr(e.message); }
   }
 
@@ -57,7 +57,7 @@ export default function Home() {
                   <span className={`pill ${c.status}`}>{c.status === 'draft' ? 'Draft' : c.status === 'paid' ? 'Unlocked' : 'Expired'}</span>
                 </div>
                 <small>Last saved {new Date(c.updated_at).toLocaleString()}</small>
-                <button className="btn primary" onClick={() => nav(`/case/${c.id}/info`, { replace: true })}>
+                <button className="btn primary" onClick={() => nav(`/case/${c.id}/${c.last_step || 'setup'}`, { replace: true })}>
                   Continue
                 </button>
               </li>
