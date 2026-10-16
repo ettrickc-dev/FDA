@@ -75,6 +75,7 @@ create table public.uploads (
   delete_after  timestamptz not null,
   created_at    timestamptz not null default now()
 );
+create index uploads_case_idx on public.uploads(case_id);
 
 -- ---------- red flags ----------
 create table public.red_flags (
@@ -110,6 +111,8 @@ create table public.documents_generated (
   expires_at       timestamptz,
   storage_key      text
 );
+create index documents_generated_case_idx on public.documents_generated(case_id);
+create index documents_generated_fv_idx on public.documents_generated(form_version_id);
 
 -- ---------- payments (kept after data deletion, stripped of case link) ----------
 create table public.payments (
@@ -126,6 +129,7 @@ create table public.payments (
   refunded_at        timestamptz,
   created_at         timestamptz not null default now()
 );
+create index payments_case_idx on public.payments(case_id);
 
 -- ---------- consents (kept after data deletion) ----------
 create table public.consents (
@@ -135,6 +139,7 @@ create table public.consents (
   accepted_at    timestamptz not null,
   ip_hash        text
 );
+create index consents_user_idx on public.consents(user_id);
 
 -- ---------- audit log (never contains answer contents) ----------
 create table public.audit_log (
@@ -163,6 +168,7 @@ create policy "own profile read" on public.profiles
 create policy "own cases read" on public.cases
   for select to authenticated using ((select auth.uid()) = user_id);
 
+-- Supabase's advisor will list these as "RLS enabled, no policy" (INFO). That is intended.
 -- Every other table: no client policies = no client access. Functions use the service role.
 -- Belt and braces: remove direct grants on the most sensitive tables.
 revoke all on public.answers   from anon, authenticated;
@@ -171,3 +177,5 @@ revoke all on public.uploads   from anon, authenticated;
 revoke all on public.consents  from anon, authenticated;
 revoke all on public.audit_log from anon, authenticated;
 revoke all on public.payments  from anon, authenticated;
+
+revoke execute on function public.handle_new_user() from anon, authenticated, public;
