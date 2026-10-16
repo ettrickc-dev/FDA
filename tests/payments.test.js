@@ -193,7 +193,9 @@ describe('download', () => {
     saveAnswers(CASE, readyAnswers());
     await payViaWebhook();
     const link = await js(await download(req('/api/download', { method: 'POST', body: { caseId: CASE } })));
-    const bad = link.body.url.replace(/.$/, (c) => (c === 'A' ? 'B' : 'A'));
+    // Flip a character in the middle of the signature (the last base64url char can carry unused bits).
+    const i = link.body.url.length - 10;
+    const bad = link.body.url.slice(0, i) + (link.body.url[i] === 'A' ? 'B' : 'A') + link.body.url.slice(i + 1);
     expect((await download(req(bad, { token: null }))).status).toBe(403);
     const other = await js(await download(req('/api/download', { method: 'POST', body: { caseId: CASE }, token: 'tok-other' })));
     expect(other.status).toBe(404);

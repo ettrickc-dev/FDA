@@ -1,4 +1,4 @@
-// After-purchase content (spec Section 4 step 13, Section 8). DRAFT — ATTORNEY TO REVIEW.
+// After-purchase content (spec Section 4 step 13, Section 8). Reviewed Oct 2026; owner sign-off pending.
 // General information only.
 
 export const DOWNLOAD_DISCLAIMER =

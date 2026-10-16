@@ -1,4 +1,4 @@
-// "What counts here?" help text. ATTORNEY TO REVIEW — every entry is draft.
+// "What counts here?" help text. Reviewed Oct 2026 against Form 4-17a (1/2026); owner sign-off pending.
 // Rules for this file (spec Section 5): describe what a field means; never tell people
 // what number to enter or how to lower an obligation. Plain language, about 6th-8th grade.
 // `maybe: true` adds "We can't tell you whether this will count in your case." and a
@@ -60,7 +60,8 @@ export const HELP = {
     title: 'Income from other household members',
     body: [
       '"Household" means the people who live with you.',
-      'For this line, report the amount other household members actually contribute toward household costs, such as rent, food, or bills — not necessarily everything they earn.',
+      'The form asks for income from other household members. It does not say whether that means everything they earn or only what they put toward household costs, such as rent, food, or bills.',
+      'If you are not sure which your court expects, ask the court\'s help center or a lawyer, and be ready to explain the number you used.',
     ],
     maybe: true,
   },

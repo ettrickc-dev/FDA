@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import SaveStatus from '../components/SaveStatus.jsx';
 import Shell from '../components/Shell.jsx';
 import StepNav, { Progress } from '../components/StepNav.jsx';
-import { ATTORNEY_CONSULT_URL, FREE_HELP_URL } from '../config.js';
+import { ATTORNEY_CONSULT_URL, ATTORNEY_PHONE_TEL, ATTORNEY_PHONE_TEXT, FREE_HELP_URL } from '../config.js';
 import { PROMPTS, RED_FLAG_QUESTIONS } from '../content/redFlags.js';
 import { api } from '../lib/api.js';
 import { useAutosave } from '../lib/useAutosave.js';
@@ -22,7 +22,9 @@ function FlagPrompt({ q, flag, onAction }) {
       ) : (
         <div className="flag-actions">
           <a className="btn" href={ATTORNEY_CONSULT_URL} target="_blank" rel="noopener noreferrer"
-            onClick={() => onAction('attorney')}>Speak with an attorney</a>
+            onClick={() => onAction('attorney')}>Message an attorney on WhatsApp</a>
+          <a className="btn" href={ATTORNEY_PHONE_TEL}
+            onClick={() => onAction('attorney')}>Call {ATTORNEY_PHONE_TEXT}</a>
           <a className="btn" href={FREE_HELP_URL} target="_blank" rel="noopener noreferrer"
             onClick={() => onAction('free_help')}>Free legal help resources</a>
           <button type="button" className="btn primary" onClick={() => onAction('continue')}>Continue</button>

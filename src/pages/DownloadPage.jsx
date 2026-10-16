@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { LawyerLinks } from '../components/Help.jsx';
 import Shell from '../components/Shell.jsx';
-import { ATTORNEY_CONSULT_URL, FREE_HELP_URL } from '../config.js';
+import { ATTORNEY_CONSULT_URL, ATTORNEY_PHONE_TEL, ATTORNEY_PHONE_TEXT, FREE_HELP_URL } from '../config.js';
 import { DOWNLOAD_DISCLAIMER, NEXT_STEPS } from '../content/afterPurchase.js';
 import { api } from '../lib/api.js';
 
@@ -44,7 +44,9 @@ export default function DownloadPage() {
         <p className="links">
           <a href={FREE_HELP_URL} target="_blank" rel="noopener noreferrer">Free legal help</a>
           {' · '}
-          <a href={ATTORNEY_CONSULT_URL} target="_blank" rel="noopener noreferrer">Attorney consultation (separate, paid)</a>
+          <a href={ATTORNEY_CONSULT_URL} target="_blank" rel="noopener noreferrer">Attorney consultation on WhatsApp (separate, paid)</a>
+          {' · '}
+          <a href={ATTORNEY_PHONE_TEL}>Call {ATTORNEY_PHONE_TEXT}</a>
         </p>
       </section>
 

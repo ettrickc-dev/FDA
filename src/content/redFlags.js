@@ -1,4 +1,4 @@
-// Red-flag screening (spec Section 6). DRAFT — owner to review wording.
+// Red-flag screening (spec Section 6). Wording reviewed Oct 2026; owner sign-off pending.
 // Non-blocking: no answer stops the person from continuing (owner may later make one a hard stop).
 
 const PREFER = { value: 'prefer_not', label: 'Prefer not to say' };
@@ -6,9 +6,10 @@ const YN = [{ value: 'yes', label: 'Yes' }, { value: 'no', label: 'No' }, PREFER
 const YNU = [{ value: 'yes', label: 'Yes' }, { value: 'no', label: 'No' }, { value: 'unsure', label: 'Not sure' }, PREFER];
 
 // Hotlines. NY statewide numbers confirmed on opdv.ny.gov (Oct 2026).
-// VERIFY BEFORE LAUNCH: National Domestic Violence Hotline number.
+// National Domestic Violence Hotline confirmed Oct 16, 2026: 1-800-799-7233, text START to 88788.
 export const HOTLINES = {
   national: '1-800-799-7233',
+  nationalText: 'START to 88788',
   nyState: '1-800-942-6906',
   nyStateText: '844-997-2121',
 };
@@ -16,7 +17,7 @@ export const HOTLINES = {
 export const PROMPTS = {
   safety: [
     'Your safety comes first. If you\'re in danger right now, call 911.',
-    `For confidential support, the National Domestic Violence Hotline is ${HOTLINES.national}, and New York's statewide hotline is ${HOTLINES.nyState} (or text ${HOTLINES.nyStateText}).`,
+    `For confidential support, the National Domestic Violence Hotline is ${HOTLINES.national} (or text ${HOTLINES.nationalText}), and New York's statewide hotline is ${HOTLINES.nyState} (or text ${HOTLINES.nyStateText}).`,
     'You can keep using this tool. Because this involves safety, we strongly suggest speaking with a lawyer or a domestic violence advocate before filing anything that includes your address.',
   ],
   custody: [
