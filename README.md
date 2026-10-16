@@ -4,7 +4,7 @@ Mobile-first web app that helps people prepare NY Family Court Form 4-17a
 (Financial Disclosure Affirmation, Short Form). React + Vite on Netlify, Netlify Functions,
 Supabase (Postgres + Auth), Stripe Checkout (added in build step 6).
 
-**Build status:** step 3 of 9 complete — scaffold, database, login, encrypted save/resume, all intake screens, red-flag screening, document checklist.
+**Build status:** step 4 of 9 complete — scaffold, database, login, encrypted save/resume, all intake screens, red-flag screening, document checklist, PDF filling + test suite.
 
 ## How the pieces fit
 
@@ -100,3 +100,22 @@ no trackers) every time content changes.
 - The "Print or type name" line under the signature is filled from the person's full legal name.
   Signature and date stay blank.
 - Form template: 4-17a revision 1/2026 (`forms/`).
+
+## PDF generation (Form 4-17a, 1/2026)
+
+- Template: `forms/4-17a_2026-01.pdf` (no fillable fields). Positions: `forms/4-17a_2026-01.map.json`
+  (also stored in `form_versions.field_map`, migration 0003).
+- Code: `netlify/functions/_lib/pdf/model.js` (answers → what goes on each line) and `fill.js` (draws it).
+- Font: DejaVu Sans Condensed (embedded; handles accented names). Answers print in dark blue.
+- Long entries shrink to fit (min 6.5 pt). If still too long, the line shows the start + "(see att.)" and the
+  full entry goes on an attachment page. Dollar amounts are never cut off.
+- Extra rows (other jobs, 4+ other-income sources, 2+ support orders, 2+ accounts/vehicles/homes,
+  3+ other assets, 3+ debts) go on "Attachment to Form 4-17a" pages, and "(see attached page)" is
+  printed next to that section. Attachment pages carry a blank "Initials" line.
+- Never filled: signature, affirmation date. Filled: "Print or type name".
+- Petitioner/Respondent is circled.
+
+**Check placement:** `node scripts/pdf-check.mjs out/` renders 8 fictional cases (empty, typical, confidential,
+self-employed, every checkbox ×2, max length, overflow) to PDF + PNG.
+**When the court revises the form:** the check script stops if the template hash changes. Run
+`python3 scripts/measure_form.py <new.pdf>` to list blank positions, make a new map file, re-run the check.
