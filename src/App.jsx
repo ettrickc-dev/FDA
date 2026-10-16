@@ -4,7 +4,7 @@ import Account from './pages/Account.jsx';
 import DocumentsPage from './pages/DocumentsPage.jsx';
 import Home from './pages/Home.jsx';
 import Landing from './pages/Landing.jsx';
-import ReviewPlaceholder from './pages/ReviewPlaceholder.jsx';
+import ReviewPage from './pages/ReviewPage.jsx';
 import SafetyPage from './pages/SafetyPage.jsx';
 import StepPage from './pages/StepPage.jsx';
 import Terms from './pages/Terms.jsx';
@@ -18,12 +18,23 @@ function Placeholder({ title }) {
   );
 }
 
+function UnlockPlaceholder() {
+  // Replaced in build step 6 by the paywall (price appears there for the first time).
+  return (
+    <Shell>
+      <h1>Unlock your final form</h1>
+      <p className="notice">The payment screen is coming in the next build step.</p>
+    </Shell>
+  );
+}
+
 function CaseStep() {
   const { step } = useParams();
   if (step === 'safety') return <SafetyPage />;
   if (step === 'documents') return <DocumentsPage />;
   if (step === 'documents-final') return <DocumentsPage final />;
-  if (step === 'review') return <ReviewPlaceholder />;
+  if (step === 'review') return <ReviewPage />;
+  if (step === 'unlock') return <UnlockPlaceholder />;
   return <StepPage />;
 }
 

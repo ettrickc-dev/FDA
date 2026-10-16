@@ -28,6 +28,7 @@ export const api = {
   createCase: () => call('/api/cases', { method: 'POST' }),
   updateCase: (id, patch) => call('/api/cases', { method: 'PATCH', body: { id, ...patch } }),
   getAnswers: (caseId) => call(`/api/answers?case=${encodeURIComponent(caseId)}`),
+  preview: (caseId) => call(`/api/preview?case=${encodeURIComponent(caseId)}`),
   logFlag: (caseId, flagType, answer) =>
     call('/api/red-flags', { method: 'POST', body: { caseId, flagType, answer } }),
   flagAction: (caseId, id, userAction) =>

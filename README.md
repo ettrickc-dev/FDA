@@ -4,7 +4,7 @@ Mobile-first web app that helps people prepare NY Family Court Form 4-17a
 (Financial Disclosure Affirmation, Short Form). React + Vite on Netlify, Netlify Functions,
 Supabase (Postgres + Auth), Stripe Checkout (added in build step 6).
 
-**Build status:** step 4 of 9 complete — scaffold, database, login, encrypted save/resume, all intake screens, red-flag screening, document checklist, PDF filling + test suite.
+**Build status:** step 5 of 9 complete — scaffold, database, login, encrypted save/resume, intake screens, red-flag screening, document checklist, PDF filling + tests, review screen + DRAFT preview.
 
 ## How the pieces fit
 
@@ -119,3 +119,16 @@ no trackers) every time content changes.
 self-employed, every checkbox ×2, max length, overflow) to PDF + PNG.
 **When the court revises the form:** the check script stops if the template hash changes. Run
 `python3 scripts/measure_form.py <new.pdf>` to list blank positions, make a new map file, re-run the check.
+
+## Draft preview (step 5)
+
+- `GET /api/preview?case=…` fills the form with a DRAFT watermark, then renders each page to a PNG
+  image on the server (PDFium compiled to WebAssembly — no native binaries) and returns the images.
+  **No PDF leaves the server on this path**, the answers are not selectable text, and the watermark is
+  part of the pixels. Images are 110 dpi grayscale: readable on screen, poor for printing.
+- Why images: testing showed the PDF watermark is a separate layer anyone can delete in a PDF editor,
+  and the answers underneath are copyable text.
+- Nothing is stored. Each preview is logged in `documents_generated` (watermarked = true, no file).
+  Limit: 40 previews per case per hour.
+- Review checks: `src/lib/reviewChecks.js` ("Please fix" vs "Worth a second look"; never blocking).
+- "Unlock final form" requires the sworn-statement acknowledgment and a finished document checklist.

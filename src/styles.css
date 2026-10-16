@@ -191,3 +191,24 @@ textarea:focus-visible { outline: 3px solid #000; outline-offset: 2px; }
 .money-period { align-items: flex-start; }
 .money-wrap .money { flex: none; }
 .pill { display: inline-block; white-space: nowrap; }
+
+/* ---------- step 5: review + preview ---------- */
+.notice.ok { background: var(--accent-soft); }
+.issues-card h2 { font-size: 1.05rem; }
+.issues-card.fix { border-left: 5px solid var(--error); }
+.issues-card.look { border-left: 5px solid var(--warn-line); }
+.issues { list-style: none; padding: 0; margin: 0; }
+.issues li { padding: 8px 0; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; align-items: flex-start; }
+.issues li:last-child { border-bottom: 0; }
+.issues .link.small { padding: 6px 0; }
+.edit-list summary { cursor: pointer; font-weight: 600; color: var(--accent); min-height: 44px; display: flex; align-items: center; }
+.edit-list ul { list-style: none; padding: 0; margin: 0; columns: 2; }
+.edit-list .link { padding: 8px 0; text-align: left; }
+.pages { display: flex; flex-direction: column; gap: 14px; margin: 12px 0; }
+.page-img { margin: 0; }
+.page-img img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: 4px; background: #fff;
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.page-img figcaption { text-align: center; font-size: 0.85rem; color: var(--muted); }
+.before-sign ul { padding-left: 1.2em; }
+.before-sign li { margin-bottom: 0.5em; }
+.unlock-card .link { display: block; margin: 8px auto 0; }
