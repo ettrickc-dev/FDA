@@ -5,6 +5,9 @@
 
 [functions]
   node_bundler = "esbuild"
+  # Court form template, field map and font are read at runtime by the PDF functions.
+  included_files = ["forms/**"]
+  external_node_modules = ["pdf-lib", "@pdf-lib/fontkit", "@hyzyla/pdfium", "pngjs"]
 
 # Single-page app routing
 [[redirects]]

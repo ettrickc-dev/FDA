@@ -27,7 +27,7 @@ export default function Home() {
   async function start() {
     try {
       const { case: c } = await api.createCase();
-      nav(`/case/${c.id}/info`, { replace: true });
+      nav(`/case/${c.id}/setup`, { replace: true });
     } catch (e) { setErr(e.message); }
   }
 
@@ -57,8 +57,13 @@ export default function Home() {
                   <span className={`pill ${c.status}`}>{c.status === 'draft' ? 'Draft' : c.status === 'paid' ? 'Unlocked' : 'Expired'}</span>
                 </div>
                 <small>Last saved {new Date(c.updated_at).toLocaleString()}</small>
-                <button className="btn primary" onClick={() => nav(`/case/${c.id}/info`, { replace: true })}>
-                  Continue
+                {c.status === 'paid' && (
+                  <button className="btn primary" onClick={() => nav(`/case/${c.id}/download`, { replace: true })}>
+                    Download final form
+                  </button>
+                )}
+                <button className={c.status === 'paid' ? 'btn' : 'btn primary'} onClick={() => nav(`/case/${c.id}/${c.last_step || 'setup'}`, { replace: true })}>
+                  {c.status === 'paid' ? 'Edit answers' : 'Continue'}
                 </button>
               </li>
             ))}
@@ -66,7 +71,11 @@ export default function Home() {
           <button className="btn" onClick={start}>Start another form</button>
         </>
       )}
-      <p className="center"><button className="link" onClick={logout}>Log out</button></p>
+      <p className="center">
+        <button className="link" onClick={logout}>Log out</button>
+        {' · '}
+        <button className="link" onClick={() => nav('/delete-my-data', { replace: true })}>Delete my data</button>
+      </p>
     </Shell>
   );
 }

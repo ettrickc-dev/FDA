@@ -1,0 +1,126 @@
+{
+  "_instructions": "ATTORNEY TO REVIEW. Every block below is placeholder general information written for the owner to edit. Each block shows when ALL of its 'when' lists match the person's answers (a missing list = matches everyone). Values: role = payor | payee | unsure; case_type = new | modification | enforcement | unsure; goal = fair | reduce | increase | understand. Rules: general information only (how courts typically treat things, documents to gather, common mistakes). No promises about outcomes. Never tell someone what number to enter or how to lower an obligation. Keep language plain (about 6th-8th grade).",
+  "version": "2026-10-draft-1",
+  "blocks": [
+    {
+      "id": "how-support-is-figured",
+      "when": {},
+      "title": "How child support is usually figured in New York",
+      "body": [
+        "New York uses a formula set out in the Child Support Standards Act. In general, it starts with both parents' incomes, applies a percentage based on the number of children, and splits the result between the parents based on their share of the combined income.",
+        "Courts can also add a share of costs like child care, health insurance, unreimbursed medical costs, and sometimes education.",
+        "The court can depart from the formula in some situations. A lawyer can explain how this may apply to you."
+      ],
+      "review": "ATTORNEY TO REVIEW"
+    },
+    {
+      "id": "common-mistakes",
+      "when": {},
+      "title": "Common mistakes on this form",
+      "body": [
+        "Mixing up gross pay (before deductions) and take-home pay (after deductions).",
+        "Leaving out cash work, tips, side jobs, or benefits.",
+        "Using different time periods without saying so — for example, weekly pay on one line and monthly on another. This app asks \"how often\" for every amount to help avoid this.",
+        "Forgetting to bring the required papers, like recent pay stubs and tax returns.",
+        "Signing without reading every line. The form is a sworn statement."
+      ],
+      "review": "ATTORNEY TO REVIEW"
+    },
+    {
+      "id": "new-case",
+      "when": { "case_type": ["new"] },
+      "title": "If this is a new child support case",
+      "body": [
+        "Cases are often heard by a Support Magistrate in Family Court. Both parents are usually asked to bring this form and their financial papers.",
+        "If you don't have all your papers by the court date, bring what you have and tell the court what is missing.",
+        "The court may set a temporary order while the case continues."
+      ],
+      "review": "ATTORNEY TO REVIEW"
+    },
+    {
+      "id": "modification",
+      "when": { "case_type": ["modification"] },
+      "title": "If you are asking to change an existing order",
+      "body": [
+        "New York law lists situations that can allow an order to be changed, such as a substantial change in circumstances. The law also mentions situations like time passing since the order was made or a change in a parent's income. Whether any of these applies to you is a legal question.",
+        "Bring a copy of the current order, and papers showing what has changed since it was made.",
+        "A change usually doesn't happen automatically. Until the court changes the order, the existing order generally stays in effect."
+      ],
+      "review": "ATTORNEY TO REVIEW — confirm statutory grounds and wording (FCA § 451)."
+    },
+    {
+      "id": "enforcement",
+      "when": { "case_type": ["enforcement"] },
+      "title": "If this case is about an order not being paid",
+      "body": [
+        "Bring a copy of the order and any payment records, such as a statement from the Support Collection Unit or your own records of payments made or missed.",
+        "Unpaid support (arrears) is treated seriously by the court. The court has several ways to enforce orders.",
+        "Because the consequences can be significant for both parents, legal advice can be especially helpful in these cases."
+      ],
+      "review": "ATTORNEY TO REVIEW"
+    },
+    {
+      "id": "payor-reduce",
+      "when": { "role": ["payor"], "goal": ["reduce"] },
+      "title": "If you are concerned the amount is too high",
+      "body": [
+        "Courts look at income from all sources, and this form must be complete and true. Leaving out income can lead to serious consequences.",
+        "Courts generally look closely at a voluntary drop in income, such as quitting a job. In some situations a court may count income a parent could earn, not just what they earn now.",
+        "What you can do is make sure the court has the full picture: bring papers for every expense you list, proof of other support orders you pay, and proof of health insurance and child care costs you pay.",
+        "A lawyer can explain whether anything in your situation could affect the amount."
+      ],
+      "review": "ATTORNEY TO REVIEW"
+    },
+    {
+      "id": "payee-increase",
+      "when": { "role": ["payee"], "goal": ["increase"] },
+      "title": "If you are concerned the amount is too low",
+      "body": [
+        "The court decides support based on information from both parents. If you have papers showing the other parent's income (for example, pay stubs, job information, or business records), bring them.",
+        "Costs such as child care, health insurance, and medical expenses may be considered in addition to basic support. Bring receipts and proof of what you pay.",
+        "A lawyer can explain how the court may look at the other parent's income and these added costs."
+      ],
+      "review": "ATTORNEY TO REVIEW"
+    },
+    {
+      "id": "fair",
+      "when": { "goal": ["fair"] },
+      "title": "Getting to a fair amount",
+      "body": [
+        "The formula is meant to produce a consistent result from complete information. The most useful thing you can do is make your form accurate and complete, and bring papers that back up each number.",
+        "If something about your situation is unusual — for example, a child with special needs, or very high or very low incomes — tell the court and consider legal advice."
+      ],
+      "review": "ATTORNEY TO REVIEW"
+    },
+    {
+      "id": "understand",
+      "when": { "goal": ["understand"] },
+      "title": "Understanding the process",
+      "body": [
+        "Support cases usually move through one or more court dates where each parent's finances are reviewed.",
+        "After a Support Magistrate decides, a parent who disagrees generally has a short, strict deadline to file written objections. Ask the court or a lawyer about the deadline in your case as soon as you get a decision.",
+        "Free legal help programs and the court's help center can explain each step."
+      ],
+      "review": "ATTORNEY TO REVIEW — consider stating the objection deadline (FCA § 439(e))."
+    },
+    {
+      "id": "never-married",
+      "when": { "relationship": ["never"] },
+      "title": "If you and the other parent were never married",
+      "body": [
+        "Parentage (who the legal parents are) usually needs to be established before support is ordered. This can happen through an Acknowledgment of Parentage or a court order.",
+        "If parentage hasn't been established yet, the court may handle that first."
+      ],
+      "review": "ATTORNEY TO REVIEW"
+    },
+    {
+      "id": "unsure",
+      "when": { "role": ["unsure"] },
+      "title": "Not sure where you stand?",
+      "body": [
+        "That's common. Your court papers usually say what the case is about and who filed it. The court's help center or a legal aid program can help you read them."
+      ],
+      "review": "ATTORNEY TO REVIEW"
+    }
+  ]
+}

@@ -28,6 +28,15 @@ export const api = {
   createCase: () => call('/api/cases', { method: 'POST' }),
   updateCase: (id, patch) => call('/api/cases', { method: 'PATCH', body: { id, ...patch } }),
   getAnswers: (caseId) => call(`/api/answers?case=${encodeURIComponent(caseId)}`),
+  preview: (caseId) => call(`/api/preview?case=${encodeURIComponent(caseId)}`),
+  deleteMyData: () => call('/api/delete-my-data', { method: 'POST', body: { confirm: 'DELETE' } }),
+  paywall: (caseId) => call(`/api/paywall?case=${encodeURIComponent(caseId)}`),
+  checkout: (caseId) => call('/api/checkout', { method: 'POST', body: { caseId } }),
+  downloadLink: (caseId) => call('/api/download', { method: 'POST', body: { caseId } }),
+  logFlag: (caseId, flagType, answer) =>
+    call('/api/red-flags', { method: 'POST', body: { caseId, flagType, answer } }),
+  flagAction: (caseId, id, userAction) =>
+    call('/api/red-flags', { method: 'PATCH', body: { caseId, id, userAction } }),
   saveSection: (caseId, section, data) =>
     call('/api/answers', { method: 'PUT', body: { caseId, section, data } }),
 };

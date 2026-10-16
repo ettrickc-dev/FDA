@@ -6,7 +6,9 @@ import { admin, audit, handler, HttpError, json, readJson, requireOwnCase, requi
 const ROLE = ['payor', 'payee', 'unsure'];
 const TYPE = ['new', 'modification', 'enforcement', 'unsure'];
 const GOAL = ['fair', 'reduce', 'increase', 'understand'];
-const COLS = 'id,status,form_type,role,case_type,goal,county,confidentiality_requested,created_at,updated_at';
+const COLS = 'id,status,form_type,role,case_type,goal,county,confidentiality_requested,last_step,created_at,updated_at';
+const STEPS = ['setup', 'safety', 'documents', 'info', 'job', 'other-income', 'household', 'other-orders',
+  'health', 'child-care', 'assets', 'expenses', 'debts', 'for-you', 'documents-final', 'review'];
 
 export default handler('cases', async (req) => {
   const user = await requireUser(req);
@@ -36,6 +38,10 @@ export default handler('cases', async (req) => {
     if ('goal' in body) { if (body.goal !== null && !GOAL.includes(body.goal)) throw new HttpError(400); patch.goal = body.goal; }
     if ('county' in body) patch.county = body.county ? String(body.county).slice(0, 40) : null;
     if ('confidentiality_requested' in body) patch.confidentiality_requested = !!body.confidentiality_requested;
+    if ('last_step' in body) {
+      if (!STEPS.includes(body.last_step)) throw new HttpError(400);
+      patch.last_step = body.last_step;
+    }
     const { data, error } = await admin().from('cases').update(patch).eq('id', body.id).select(COLS).single();
     if (error) throw new HttpError(500);
     return json({ case: data });
