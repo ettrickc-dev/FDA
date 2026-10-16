@@ -108,6 +108,13 @@ Supabase dashboard settings:
 
 ## 7. Deploy to Netlify
 
+A Netlify project already exists: **form-prep-4-17a** (`https://form-prep-4-17a.netlify.app`, site id
+`29d83db7-ffc3-48be-81e2-7aecc4da78a0`). Already set there: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
+(publishable key), `SUPABASE_URL`, `SUPPORT_EMAIL`, `ANSWERS_ENC_KEY_VERSION`. Still to add (secrets): see section 4.
+To connect it to GitHub: Netlify → form-prep-4-17a → Project configuration → Build & deploy → Link repository.
+Or deploy from your computer: in this folder run `npx netlify-cli deploy --build --prod --site 29d83db7-ffc3-48be-81e2-7aecc4da78a0`.
+
+
 1. Netlify → Add new project → Import from GitHub → `ettrickc-dev/FDA`.
 2. Build settings come from `netlify.toml` (`npm run build`, publish `dist`, functions `netlify/functions`,
    `forms/**` included for the PDF functions).
