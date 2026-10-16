@@ -71,7 +71,11 @@ export default function Home() {
           <button className="btn" onClick={start}>Start another form</button>
         </>
       )}
-      <p className="center"><button className="link" onClick={logout}>Log out</button></p>
+      <p className="center">
+        <button className="link" onClick={logout}>Log out</button>
+        {' · '}
+        <button className="link" onClick={() => nav('/delete-my-data', { replace: true })}>Delete my data</button>
+      </p>
     </Shell>
   );
 }

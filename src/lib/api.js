@@ -29,6 +29,7 @@ export const api = {
   updateCase: (id, patch) => call('/api/cases', { method: 'PATCH', body: { id, ...patch } }),
   getAnswers: (caseId) => call(`/api/answers?case=${encodeURIComponent(caseId)}`),
   preview: (caseId) => call(`/api/preview?case=${encodeURIComponent(caseId)}`),
+  deleteMyData: () => call('/api/delete-my-data', { method: 'POST', body: { confirm: 'DELETE' } }),
   paywall: (caseId) => call(`/api/paywall?case=${encodeURIComponent(caseId)}`),
   checkout: (caseId) => call('/api/checkout', { method: 'POST', body: { caseId } }),
   downloadLink: (caseId) => call('/api/download', { method: 'POST', body: { caseId } }),

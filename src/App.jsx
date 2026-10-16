@@ -5,6 +5,7 @@ import DocumentsPage from './pages/DocumentsPage.jsx';
 import Home from './pages/Home.jsx';
 import Landing from './pages/Landing.jsx';
 import CheckoutReturn from './pages/CheckoutReturn.jsx';
+import DeleteMyData from './pages/DeleteMyData.jsx';
 import DownloadPage from './pages/DownloadPage.jsx';
 import ForYouPage from './pages/ForYouPage.jsx';
 import RefundPolicy from './pages/RefundPolicy.jsx';
@@ -45,7 +46,7 @@ export default function App() {
       <Route path="/case/:id/:step" element={<CaseStep />} />
       <Route path="/checkout/return" element={<CheckoutReturn />} />
       <Route path="/refunds" element={<RefundPolicy />} />
-      <Route path="/delete-my-data" element={<Placeholder title="Delete my data" />} />
+      <Route path="/delete-my-data" element={<DeleteMyData />} />
       <Route path="/privacy" element={<Placeholder title="Privacy Policy" />} />
       <Route path="/terms-of-use" element={<Placeholder title="Terms of Use" />} />
       <Route path="*" element={<Placeholder title="Page not found" />} />

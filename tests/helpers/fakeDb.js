@@ -71,7 +71,9 @@ export function fakeDb({ users = {} } = {}) {
   return {
     tables, T,
     from: (t) => new Q(t),
+    storage: { from: () => ({ remove: async (keys) => { (tables.__removedFiles ||= []).push(...keys); return { error: null }; } }) },
     auth: {
+      admin: { deleteUser: async (id) => { (tables.__deletedUsers ||= []).push(id); for (const [k, u] of Object.entries(users)) if (u.id === id) delete users[k]; return { error: null }; } },
       getUser: async (token) => (users[token] ? { data: { user: users[token] }, error: null } : { data: null, error: { message: 'bad token' } }),
     },
   };
