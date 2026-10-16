@@ -2,7 +2,7 @@
 // owner and ethics counsel. Bracketed items are decisions not yet made. The privacy policy is
 // written to match what the system actually does today; keep it in sync if the system changes.
 import Shell from '../components/Shell.jsx';
-import { ATTORNEY, SUPPORT_EMAIL } from '../config.js';
+import { ACCESS_DAYS_TEXT, ATTORNEY, RETENTION_DAYS_TEXT, SUPPORT_EMAIL } from '../config.js';
 
 const Draft = () => <p className="notice">[DRAFT — owner and ethics counsel to review before launch. Bracketed items are not yet decided.]</p>;
 
@@ -39,7 +39,7 @@ export function TermsOfUse() {
       </Section>
       <Section title="6. Fees and refunds">
         <p>Previewing is free. Downloading or printing the final, unwatermarked forms requires payment.</p>
-        <p>The price is shown on the payment screen before you pay. It includes unlimited edits and downloads for [N] days. No other fees are added at checkout. Refunds follow our <a href="/refunds">Refund Policy</a>.</p>
+        <p>The price is shown on the payment screen before you pay. It includes unlimited edits and downloads for {ACCESS_DAYS_TEXT} days. No other fees are added at checkout. Refunds follow our <a href="/refunds">Refund Policy</a>.</p>
       </Section>
       <Section title="7. Limitation of liability" flag="Rule 1.8(h) — a lawyer may not prospectively limit malpractice liability to a client. Confirm this clause is permissible for a non-client document service and how it interacts with any later consultation.">
         <p>[To be drafted by counsel.]</p>
@@ -97,9 +97,9 @@ export function PrivacyPolicy() {
       </Section>
       <Section title="How long we keep it">
         <ul>
-          <li>Forms in progress are deleted after [X] days without activity.</li>
-          <li>Accounts with no forms are deleted after [X] days without activity.</li>
-          <li>Uploaded papers are deleted after [X] days.</li>
+          <li>Forms in progress are deleted after {RETENTION_DAYS_TEXT} days without activity.</li>
+          <li>Accounts with no forms are deleted after {RETENTION_DAYS_TEXT} days without activity.</li>
+          <li>We don't currently accept uploaded papers.</li>
           <li>After you delete your data, we keep only: payment records (amount, date, status, a random reference) and Terms-acceptance records, with the link to you removed, for [period — counsel to confirm].</li>
           <li>Backups: [describe backup schedule and how long backups are kept, per the Supabase plan in use].</li>
         </ul>

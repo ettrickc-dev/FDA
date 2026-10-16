@@ -4,7 +4,9 @@
 
 export const TERMS_VERSION = '2026-10-draft-1';
 export const RULES_EFFECTIVE_DATE = '[DATE — owner to set]';
-export const RETENTION_DAYS_TEXT = '[X]'; // fills "delete it after [X] days" until owner decides
+export const RETENTION_DAYS_TEXT = '90'; // must match DRAFT_RETENTION_DAYS in Netlify
+export const ACCESS_DAYS_TEXT = '90'; // must match ACCESS_DAYS in Netlify
+export const REFUND_DAYS_TEXT = '7'; // must match REFUND_DAYS in Netlify
 
 export const ATTORNEY = {
   name: 'Ettrick Campbell',
