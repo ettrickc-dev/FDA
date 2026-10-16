@@ -27,6 +27,9 @@ export function admin() {
   return _admin;
 }
 
+// Tests only: swap in a fake database client.
+export function __setAdmin(fake) { _admin = fake; }
+
 export async function requireUser(req) {
   const token = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '');
   if (!token) throw new HttpError(401, 'Please log in again.');

@@ -4,7 +4,7 @@ Mobile-first web app that helps people prepare NY Family Court Form 4-17a
 (Financial Disclosure Affirmation, Short Form). React + Vite on Netlify, Netlify Functions,
 Supabase (Postgres + Auth), Stripe Checkout (added in build step 6).
 
-**Build status:** step 5 of 9 complete — scaffold, database, login, encrypted save/resume, intake screens, red-flag screening, document checklist, PDF filling + tests, review screen + DRAFT preview.
+**Build status:** step 6 of 9 complete — …through review + DRAFT preview, plus paywall, Stripe Checkout (test mode), webhook, and clean PDF download.
 
 ## How the pieces fit
 
@@ -42,7 +42,8 @@ npm test                    # encryption tests + automated checks of the spec's 
 | `IP_HASH_SALT` | functions | **secret**, `openssl rand -hex 32` |
 | `SUPPORT_EMAIL` | functions | ettrickc@gmail.com |
 | `PRICE_CENTS`, `ACCESS_DAYS`, `REFUND_DAYS`, `DRAFT_RETENTION_DAYS`, `UPLOAD_RETENTION_DAYS`, `STRIPE_STATEMENT_DESCRIPTOR` | functions | owner decisions, placeholders for now |
-| `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | functions | step 6; **test keys** until go-live |
+| `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | functions | **test keys** (`sk_test_…`, `whsec_…`) until go-live |
+| `DOWNLOAD_TOKEN_SECRET` | functions | **secret**, `openssl rand -hex 32` |
 
 Enter secrets in **Netlify → Site configuration → Environment variables**. Use separate values
 for *Deploy Previews* (test) and *Production* (live). Never paste secrets into chat or commit them.
@@ -132,3 +133,49 @@ self-employed, every checkbox ×2, max length, overflow) to PDF + PNG.
   Limit: 40 previews per case per hour.
 - Review checks: `src/lib/reviewChecks.js` ("Please fix" vs "Worth a second look"; never blocking).
 - "Unlock final form" requires the sworn-statement acknowledgment and a finished document checklist.
+
+## Payments (step 6)
+
+**Flow:** review → paywall (`/case/:id/unlock`, the first and only screen showing the price) →
+Stripe-hosted Checkout → back to `/checkout/return`, which waits for the server → download page.
+
+- `GET /api/paywall` — the only endpoint that returns the price (from `PRICE_CENTS`).
+- `POST /api/checkout` — requires a finished document checklist and the "I understand" acknowledgment.
+  Sends Stripe only an opaque reference (`r_…`), the price, and the neutral product name
+  "Document preparation access". No names, case ids, or answers go to Stripe.
+- `POST /api/stripe-webhook` — **the only thing that unlocks access.** Verifies Stripe's signature,
+  ignores duplicates, sets `access_expires_at = paid_at + ACCESS_DAYS`. A **full** refund revokes access;
+  partial refunds don't. Disputes are logged only.
+- `POST /api/download` → 5-minute signed link → `GET /api/download?t=…` regenerates the clean PDF from
+  current answers after re-checking login, ownership, payment, expiry, checklist. Never stored. 20 per day.
+  Each download is logged in `documents_generated` (delivery evidence for chargebacks, with `consents`).
+- Placeholders: while `PRICE_CENTS`, `ACCESS_DAYS`, or `REFUND_DAYS` is blank, the paywall shows
+  "[price not set]" / "[N]" and payment stays closed.
+
+### Test it (Stripe test mode)
+
+1. Stripe dashboard → make sure **Test mode** is on → Developers → API keys → copy the *secret* test key
+   into Netlify as `STRIPE_SECRET_KEY` (Deploy Previews + local). Never paste it into chat.
+2. Webhook: Developers → Webhooks → Add endpoint → `https://<your-site>/api/stripe-webhook`, events:
+   `checkout.session.completed`, `checkout.session.async_payment_succeeded`,
+   `checkout.session.async_payment_failed`, `checkout.session.expired`, `charge.refunded`,
+   `charge.dispute.created`. Copy its signing secret into `STRIPE_WEBHOOK_SECRET`.
+3. Local testing: `stripe login` then `stripe listen --forward-to localhost:8888/api/stripe-webhook`
+   (use the `whsec_…` it prints), and `netlify dev`.
+4. Set test values, e.g. `PRICE_CENTS=100`, `ACCESS_DAYS=60`, `REFUND_DAYS=7`.
+5. Test cards (any future date, any CVC, any ZIP):
+   - `4242 4242 4242 4242` — succeeds
+   - `4000 0000 0000 9995` — declined (insufficient funds)
+   - `4000 0025 0000 3155` — requires authentication (3-D Secure)
+6. Check: paying unlocks the download page; pressing Back from Stripe changes nothing; refunding the
+   payment in the dashboard locks the download again; `npm test` covers all of this automatically too.
+
+### Stripe settings to make neutral (dashboard)
+- Settings → Public details → **statement descriptor**: a neutral name (not "child support" or "court").
+- Settings → Customer emails → turn on receipts only if the wording is neutral; check the business name.
+- Branding → neutral name and icon on the Checkout page.
+
+### Not decided yet (configurable, owner/accountant)
+- Sales tax / Stripe Tax: **off**. Turn on only after your accountant confirms (`automatic_tax` in checkout.js).
+- Failed payments: the person simply stays on the paywall and can try again.
+- Re-purchase after expiry: allowed; the paywall says the earlier access period ended.

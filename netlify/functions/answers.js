@@ -22,9 +22,8 @@ export default handler('answers', async (req) => {
 
   if (req.method === 'PUT') {
     const { caseId, section, data } = await readJson(req);
-    const c = await requireOwnCase(user.id, caseId);
+    await requireOwnCase(user.id, caseId);
     if (!isSection(section)) throw new HttpError(400, 'Unknown section.');
-    if (c.status === 'expired') throw new HttpError(409, 'This form has expired.');
     if (typeof data !== 'object' || data === null || Array.isArray(data)) throw new HttpError(400);
     const row = {
       case_id: caseId, section,

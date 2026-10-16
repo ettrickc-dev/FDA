@@ -57,8 +57,13 @@ export default function Home() {
                   <span className={`pill ${c.status}`}>{c.status === 'draft' ? 'Draft' : c.status === 'paid' ? 'Unlocked' : 'Expired'}</span>
                 </div>
                 <small>Last saved {new Date(c.updated_at).toLocaleString()}</small>
-                <button className="btn primary" onClick={() => nav(`/case/${c.id}/${c.last_step || 'setup'}`, { replace: true })}>
-                  Continue
+                {c.status === 'paid' && (
+                  <button className="btn primary" onClick={() => nav(`/case/${c.id}/download`, { replace: true })}>
+                    Download final form
+                  </button>
+                )}
+                <button className={c.status === 'paid' ? 'btn' : 'btn primary'} onClick={() => nav(`/case/${c.id}/${c.last_step || 'setup'}`, { replace: true })}>
+                  {c.status === 'paid' ? 'Edit answers' : 'Continue'}
                 </button>
               </li>
             ))}

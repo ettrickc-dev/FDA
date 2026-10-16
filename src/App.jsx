@@ -4,7 +4,11 @@ import Account from './pages/Account.jsx';
 import DocumentsPage from './pages/DocumentsPage.jsx';
 import Home from './pages/Home.jsx';
 import Landing from './pages/Landing.jsx';
+import CheckoutReturn from './pages/CheckoutReturn.jsx';
+import DownloadPage from './pages/DownloadPage.jsx';
+import RefundPolicy from './pages/RefundPolicy.jsx';
 import ReviewPage from './pages/ReviewPage.jsx';
+import UnlockPage from './pages/UnlockPage.jsx';
 import SafetyPage from './pages/SafetyPage.jsx';
 import StepPage from './pages/StepPage.jsx';
 import Terms from './pages/Terms.jsx';
@@ -18,23 +22,14 @@ function Placeholder({ title }) {
   );
 }
 
-function UnlockPlaceholder() {
-  // Replaced in build step 6 by the paywall (price appears there for the first time).
-  return (
-    <Shell>
-      <h1>Unlock your final form</h1>
-      <p className="notice">The payment screen is coming in the next build step.</p>
-    </Shell>
-  );
-}
-
 function CaseStep() {
   const { step } = useParams();
   if (step === 'safety') return <SafetyPage />;
   if (step === 'documents') return <DocumentsPage />;
   if (step === 'documents-final') return <DocumentsPage final />;
   if (step === 'review') return <ReviewPage />;
-  if (step === 'unlock') return <UnlockPlaceholder />;
+  if (step === 'unlock') return <UnlockPage />;
+  if (step === 'download') return <DownloadPage />;
   return <StepPage />;
 }
 
@@ -46,6 +41,9 @@ export default function App() {
       <Route path="/account" element={<Account />} />
       <Route path="/home" element={<Home />} />
       <Route path="/case/:id/:step" element={<CaseStep />} />
+      <Route path="/checkout/return" element={<CheckoutReturn />} />
+      <Route path="/refunds" element={<RefundPolicy />} />
+      <Route path="/delete-my-data" element={<Placeholder title="Delete my data" />} />
       <Route path="/privacy" element={<Placeholder title="Privacy Policy" />} />
       <Route path="/terms-of-use" element={<Placeholder title="Terms of Use" />} />
       <Route path="*" element={<Placeholder title="Page not found" />} />
