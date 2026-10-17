@@ -30,7 +30,7 @@ export function TermsOfUse() {
       <h1>Terms of Use</h1>
       <p className="hint">Version {TERMS_VERSION} · Effective {LEGAL_EFFECTIVE_DATE}</p>
       <Section title="1. What this service is">
-        <p>This website ("the tool") helps you prepare the New York Family Court Financial Disclosure Affidavit (officially Form 4-17a, Financial Disclosure Affirmation, Short Form). It provides document preparation and general legal information only. It is offered by {ATTORNEY.name}, Attorney at Law, {ATTORNEY.address} ("we," "us").</p>
+        <p>This website ("the tool") helps you prepare the New York Family Court Financial Disclosure Affirmation (Form 4-17a, Short Form). It provides document preparation and general legal information only. It is offered by {ATTORNEY.name}, Attorney at Law, {ATTORNEY.address} ("we," "us").</p>
         <p>By creating an account or using the tool, you agree to these Terms. If you do not agree, please do not use the tool.</p>
       </Section>
       <Section title="2. No attorney-client relationship">
