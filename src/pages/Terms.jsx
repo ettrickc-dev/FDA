@@ -34,7 +34,7 @@ export default function Terms() {
     <Shell>
       <h1>Before you start</h1>
       <div className="card terms">
-        <p>This tool helps you prepare New York Family Court Form 4-17a. It is <strong>not legal advice</strong>, and using it <strong>does not create an attorney-client relationship</strong> with {ATTORNEY.name}{ATTORNEY.firm ? ` or ${ATTORNEY.firm}` : ''}.</p>
+        <p>This tool helps you prepare the New York Family Court Financial Disclosure Affidavit. It is <strong>not legal advice</strong>, and using it <strong>does not create an attorney-client relationship</strong> with {ATTORNEY.name}{ATTORNEY.firm ? ` or ${ATTORNEY.firm}` : ''}.</p>
         <p>Results are <strong>estimates</strong> based on the information you enter and on rules and amounts in effect on {RULES_EFFECTIVE_DATE}. A court may reach a different result.</p>
         <p><strong>You are responsible for reviewing every answer.</strong> The completed form is a sworn statement. False statements can lead to penalties for perjury.</p>
         <p>Previewing is free. Downloading or printing the final, unwatermarked forms requires payment.</p>

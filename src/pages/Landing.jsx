@@ -12,16 +12,16 @@ import { ATTORNEY } from '../config.js';
 export default function Landing() {
   return (
     <Shell showAd>
-      <h1>Complete your NY child support Financial Disclosure form.</h1>
+      <h1>Complete your NY child support Financial Disclosure Affidavit.</h1>
       <p className="lede">
-        Step-by-step help preparing Family Court Form 4-17a, in plain language, on your phone or computer.
+        Step-by-step help preparing the Family Court Financial Disclosure Affidavit, in plain language, on your phone or computer.
       </p>
       <Link className="btn primary big" to="/terms" replace>Get started</Link>
       <p className="fee-note">Free to build and preview. Pay only to download your final forms.</p>
 
       <ul className="trust" aria-label="About this tool">
         <li>Designed by {ATTORNEY.name}, Esq., a New York attorney</li>
-        <li>Uses the court's official Form 4-17a (revised 1/2026)</li>
+        <li>Uses the court's official Financial Disclosure Affidavit form (revised 1/2026)</li>
         <li>Your answers are encrypted. No ads and no tracking.</li>
       </ul>
 

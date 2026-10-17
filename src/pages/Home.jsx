@@ -44,7 +44,7 @@ export default function Home() {
       {cases?.length === 0 && (
         <div className="card">
           <p>You haven't started a form yet.</p>
-          <button className="btn primary big" onClick={start}>Start Form 4-17a</button>
+          <button className="btn primary big" onClick={start}>Start my Financial Disclosure Affidavit</button>
         </div>
       )}
       {cases?.length > 0 && (
@@ -53,7 +53,7 @@ export default function Home() {
             {cases.map((c) => (
               <li key={c.id} className="card">
                 <div>
-                  <strong>Form 4-17a</strong>
+                  <strong>Financial Disclosure Affidavit</strong>
                   <span className={`pill ${c.status}`}>{c.status === 'draft' ? 'Draft' : c.status === 'paid' ? 'Unlocked' : 'Expired'}</span>
                 </div>
                 <small>Last saved {new Date(c.updated_at).toLocaleString()}</small>

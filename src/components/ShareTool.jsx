@@ -4,7 +4,7 @@
 import { useState } from 'react';
 
 const SHARE_URL = 'https://forms.ettrickcampbell.com';
-const SHARE_TEXT = 'A step-by-step helper for the NY Family Court financial disclosure form (4-17a).';
+const SHARE_TEXT = 'A step-by-step helper for the NY Family Court Financial Disclosure Affidavit.';
 
 export default function ShareTool({ compact = false }) {
   const [status, setStatus] = useState('');
