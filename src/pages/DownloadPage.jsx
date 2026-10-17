@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { LawyerLinks } from '../components/Help.jsx';
+import ShareTool from '../components/ShareTool.jsx';
 import Shell from '../components/Shell.jsx';
 import { ATTORNEY_CONSULT_URL, ATTORNEY_PHONE_TEL, ATTORNEY_PHONE_TEXT, FREE_HELP_URL } from '../config.js';
 import { DOWNLOAD_DISCLAIMER, NEXT_STEPS } from '../content/afterPurchase.js';
@@ -67,6 +68,8 @@ export default function DownloadPage() {
         <p>Your edits are included every time you download.</p>
         <button type="button" className="btn" onClick={() => nav(`/case/${id}/review`, { replace: true })}>Review or change answers</button>
       </section>
+
+      <ShareTool />
 
       <section className="card subtle">
         <h2>Questions about your case?</h2>
