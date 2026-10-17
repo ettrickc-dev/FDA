@@ -20,7 +20,7 @@ function Placeholder({ title }) {
   return (
     <Shell>
       <h1>{title}</h1>
-      <p className="notice">[DRAFT — owner and ethics counsel to supply final text before launch.]</p>
+      <p>We couldn't find that page. <a href="/">Go to the start</a>.</p>
     </Shell>
   );
 }

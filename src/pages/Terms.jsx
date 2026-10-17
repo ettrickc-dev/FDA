@@ -5,7 +5,7 @@ import { ATTORNEY, RETENTION_DAYS_TEXT, RULES_EFFECTIVE_DATE, TERMS_VERSION } fr
 import { api } from '../lib/api.js';
 import { supabase } from '../lib/supabase.js';
 
-// DRAFT legal text from spec Section 8 — owner / ethics counsel to review.
+// Consent screen text (spec Section 8). Fee sentence wording is fixed by the spec — do not edit it.
 export default function Terms() {
   const [agreed, setAgreed] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -38,7 +38,7 @@ export default function Terms() {
         <p>Results are <strong>estimates</strong> based on the information you enter and on rules and amounts in effect on {RULES_EFFECTIVE_DATE}. A court may reach a different result.</p>
         <p><strong>You are responsible for reviewing every answer.</strong> The completed form is a sworn statement. False statements can lead to penalties for perjury.</p>
         <p>Previewing is free. Downloading or printing the final, unwatermarked forms requires payment.</p>
-        <p>We store your information securely and delete it after {RETENTION_DAYS_TEXT} days. You can delete it anytime. See our <a href="/privacy">Privacy Policy</a>.</p>
+        <p>We store your information securely and delete it after {RETENTION_DAYS_TEXT} days without activity. You can delete it anytime. See our <a href="/privacy">Privacy Policy</a>.</p>
       </div>
       <label className="check big-check">
         <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
