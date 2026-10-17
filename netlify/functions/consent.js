@@ -2,7 +2,9 @@
 // Records that the logged-in user accepted a given version of the Terms.
 import { admin, audit, handler, hashIp, HttpError, json, readJson, requireUser } from './_lib/http.js';
 
-export const ACCEPTED_TERMS_VERSIONS = ['2026-10-draft-1'];
+// Must include TERMS_VERSION from src/config.js (a test checks this). Older versions stay listed so
+// earlier acceptances remain valid; the last entry is the current one.
+export const ACCEPTED_TERMS_VERSIONS = ['2026-10-draft-1', '2026-10-19'];
 
 export const CURRENT_TERMS_VERSION = ACCEPTED_TERMS_VERSIONS[ACCEPTED_TERMS_VERSIONS.length - 1];
 
