@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import GuestBanner from '../components/GuestBanner.jsx';
+import ReadyList from '../components/ReadyList.jsx';
 import Shell from '../components/Shell.jsx';
+import { isGuest, useSessionUser } from '../lib/session.js';
 import { api } from '../lib/api.js';
 import { supabase } from '../lib/supabase.js';
 import { flushPendingConsent } from './Account.jsx';
@@ -9,6 +12,7 @@ export default function Home() {
   const [cases, setCases] = useState(null);
   const [err, setErr] = useState('');
   const nav = useNavigate();
+  const user = useSessionUser();
 
   useEffect(() => {
     (async () => {
@@ -39,13 +43,17 @@ export default function Home() {
   return (
     <Shell>
       <h1>Your forms</h1>
+      <GuestBanner />
       {err && <p className="error" role="alert">{err}</p>}
       {cases === null && !err && <p>Loading…</p>}
       {cases?.length === 0 && (
-        <div className="card">
-          <p>You haven't started a form yet.</p>
-          <button className="btn primary big" onClick={start}>Start my Financial Disclosure Affirmation</button>
-        </div>
+        <>
+          <ReadyList title="Before you start, have these ready" />
+          <div className="card">
+            <p>You haven't started a form yet.</p>
+            <button className="btn primary big" onClick={start}>Start my Financial Disclosure Affirmation</button>
+          </div>
+        </>
       )}
       {cases?.length > 0 && (
         <>
@@ -72,7 +80,7 @@ export default function Home() {
         </>
       )}
       <p className="center">
-        <button className="link" onClick={logout}>Log out</button>
+        <button className="link" onClick={logout}>{isGuest(user) ? 'End guest session' : 'Log out'}</button>
         {' · '}
         <button className="link" onClick={() => nav('/delete-my-data', { replace: true })}>Delete my data</button>
       </p>

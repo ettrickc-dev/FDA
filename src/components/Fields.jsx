@@ -70,6 +70,24 @@ function FieldControl({ f, value, set, data }) {
         </div>
       );
 
+    case 'date':
+      return (
+        <div className="field">
+          <Label f={f} htmlFor={id} />
+          <Hint f={f} id={hintId} />
+          <input id={id} type="date" value={value ?? ''} aria-describedby={hintId}
+            onChange={(e) => set(e.target.value)} />
+        </div>
+      );
+
+    case 'checkbox':
+      return (
+        <label className="choice">
+          <input type="checkbox" checked={!!value} onChange={(e) => set(e.target.checked)} />
+          <span>{f.label}</span>
+        </label>
+      );
+
     case 'select':
       return (
         <div className="field">
@@ -221,7 +239,7 @@ function FieldControl({ f, value, set, data }) {
     }
 
     case 'total': {
-      const computed = sumFields(data, f.sumOf);
+      const computed = sumFields(data, typeof f.sumOf === 'function' ? f.sumOf(data) : f.sumOf);
       const override = data?.[f.name];
       const overrideN = parseMoney(override);
       const mismatch = data?.[`${f.name}_custom`] && typeof overrideN === 'number' && !Number.isNaN(overrideN) && Math.abs(overrideN - computed) >= 0.01;

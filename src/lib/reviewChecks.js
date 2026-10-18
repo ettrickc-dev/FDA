@@ -5,7 +5,7 @@
 // Wording rule: describe what we noticed; never suggest what number to enter.
 import { checklistComplete } from './checklist.js';
 import { parseMoney, sumFields } from './formLogic.js';
-import { EXPENSE_FIELDS } from '../content/screens.js';
+import { activeExpenseFields } from '../content/screens.js';
 
 const PER_MONTH = { week: 52 / 12, '2weeks': 26 / 12, month: 1, year: 1 / 12 };
 
@@ -83,8 +83,8 @@ export function reviewChecks(a = {}) {
 
   // ---- Expenses ----
   const e = a.expenses || {};
-  const computed = sumFields(e, EXPENSE_FIELDS);
-  if (EXPENSE_FIELDS.some((k) => bad(e[k]))) add('fix', 'expenses', 'One of your expenses isn\'t a dollar amount.');
+  const computed = sumFields(e, activeExpenseFields(e));
+  if (activeExpenseFields(e).some((k) => bad(e[k]))) add('fix', 'expenses', 'One of your expenses isn\'t a dollar amount.');
   if (computed === 0 && !e.total) add('check', 'expenses', 'No monthly expenses are filled in.');
   if (e.total_custom) {
     const typed = parseMoney(e.total);

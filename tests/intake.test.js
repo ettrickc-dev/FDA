@@ -80,7 +80,7 @@ describe('screen definitions', () => {
       'ins_life', 'ins_auto', 'ins_home', 'ins_other', 'trans_auto_payment', 'trans_gas', 'trans_public',
       'child_care', 'school', 'food', 'clothing', 'medical', 'contributions', 'other',
     ]));
-    expect(EXPENSE_FIELDS).toHaveLength(20);
+    expect(EXPENSE_FIELDS).toHaveLength(21);
   });
 });
 

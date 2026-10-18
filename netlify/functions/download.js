@@ -2,30 +2,13 @@
 // GET  /api/download?t=<token>                -> the clean PDF (generated now, never stored)
 // The clean PDF only exists after the server verifies: login + ownership + paid + not
 // expired/refunded + checklist + acknowledgment (spec Section 10.4).
-import { getAccess, signDownloadToken, verifyDownloadToken } from './_lib/access.js';
-import { activeFormVersion, loadAnswers } from './_lib/answers.js';
+import { signDownloadToken, verifyDownloadToken } from './_lib/access.js';
+import { activeFormVersion } from './_lib/answers.js';
+import { assertCanDownload, rateLimit } from './_lib/delivery.js';
 import { admin, audit, handler, HttpError, json, readJson, requireOwnCase, requireUser } from './_lib/http.js';
 import { fillForm } from './_lib/pdf/fill.js';
-import { readiness } from './_lib/readiness.js';
 
-const MAX_DOWNLOADS_PER_DAY = 20;
 const TOKEN_TTL_SECONDS = 300;
-
-async function assertCanDownload(caseId) {
-  const access = await getAccess(caseId);
-  if (access.state === 'expired') throw new HttpError(403, 'Your access period has ended.');
-  if (!access.active) throw new HttpError(402, 'Please unlock your final form first.');
-  const answers = await loadAnswers(caseId);
-  if (!readiness(answers).ready) throw new HttpError(409, 'Please finish your document checklist and review first.');
-  return answers;
-}
-
-async function rateLimit(caseId) {
-  const since = new Date(Date.now() - 86400_000).toISOString();
-  const { count } = await admin().from('documents_generated').select('id', { count: 'exact', head: true })
-    .eq('case_id', caseId).eq('watermarked', false).gte('generated_at', since);
-  if ((count ?? 0) >= MAX_DOWNLOADS_PER_DAY) throw new HttpError(429, 'You\'ve reached today\'s download limit. Please try again tomorrow.');
-}
 
 export default handler('download', async (req) => {
   if (req.method === 'POST') {

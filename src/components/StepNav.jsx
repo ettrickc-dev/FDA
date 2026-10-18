@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FLOW, STEP_NAMES } from '../content/screens.js';
 import { api } from '../lib/api.js';
+import { countdownText, useCourtDate } from '../lib/courtDate.js';
+import GuestBanner from './GuestBanner.jsx';
 
 export function useStepNav(caseId, step) {
   const nav = useNavigate();
@@ -22,11 +24,24 @@ export function Progress({ caseId, step }) {
   // Remember where the person is, so "Continue" brings them back here.
   useEffect(() => { api.updateCase(caseId, { last_step: step }).catch(() => {}); }, [caseId, step]);
   const pct = Math.round(((index + 1) / total) * 100);
+  const courtDate = useCourtDate(caseId);
+  const cd = countdownText(courtDate);
   return (
-    <div className="progress" aria-label={`Step ${index + 1} of ${total}: ${STEP_NAMES[step]}`}>
-      <div className="progress-bar"><div style={{ width: `${pct}%` }} /></div>
-      <small>Step {index + 1} of {total}</small>
-    </div>
+    <>
+      <GuestBanner />
+      <div className="mandatory" role="note">
+        <strong>Required court form.</strong> Answer every question accurately. This is a sworn statement.
+      </div>
+      {cd ? (
+        <p className={`countdown ${cd.tone}`} role="status">{cd.text}</p>
+      ) : step !== 'setup' ? (
+        <p className="countdown none">Add your court date on "Your situation" to see how much time you have.</p>
+      ) : null}
+      <div className="progress" aria-label={`Step ${index + 1} of ${total}: ${STEP_NAMES[step]}`}>
+        <div className="progress-bar"><div style={{ width: `${pct}%` }} /></div>
+        <small>Step {index + 1} of {total}</small>
+      </div>
+    </>
   );
 }
 

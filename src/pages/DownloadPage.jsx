@@ -7,6 +7,7 @@ import Shell from '../components/Shell.jsx';
 import { ATTORNEY_CONSULT_URL, ATTORNEY_PHONE_TEL, ATTORNEY_PHONE_TEXT, FREE_HELP_URL } from '../config.js';
 import { DOWNLOAD_DISCLAIMER, NEXT_STEPS } from '../content/afterPurchase.js';
 import { api } from '../lib/api.js';
+import { isGuest, useSessionUser } from '../lib/session.js';
 
 export default function DownloadPage() {
   const { id } = useParams();
@@ -14,6 +15,22 @@ export default function DownloadPage() {
   const [info, setInfo] = useState(null);
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState(false);
+  const user = useSessionUser();
+  const [email, setEmail] = useState(null); // null = not edited yet, use the account email
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState('');
+  const [mailErr, setMailErr] = useState('');
+  const emailValue = email ?? (user && !isGuest(user) ? user.email || '' : '');
+
+  async function sendEmail(e) {
+    e.preventDefault();
+    setSending(true); setMailErr(''); setSent('');
+    try {
+      await api.emailForm(id, emailValue);
+      setSent(emailValue);
+    } catch (e2) { setMailErr(e2.message); }
+    finally { setSending(false); }
+  }
 
   useEffect(() => {
     api.paywall(id).then((r) => {
@@ -56,6 +73,24 @@ export default function DownloadPage() {
         {busy ? 'Preparing your form…' : 'Download my form (PDF)'}
       </button>
       <p className="hint center">On a shared phone or computer? Delete the file from your downloads after printing.</p>
+
+      <section className="card">
+        <h2>Email it to yourself</h2>
+        <p>No printer on your phone? Send the PDF to your email and print it later from any computer, a library, or a print shop.</p>
+        <form className="form" onSubmit={sendEmail} noValidate>
+          <label className="field">
+            <span>Send to this email</span>
+            <input type="email" autoComplete="email" value={emailValue} maxLength={254}
+              onChange={(e) => { setEmail(e.target.value.trim()); setSent(''); }} />
+            <small>Check the address. Anyone who can open this inbox will be able to see your form.</small>
+          </label>
+          {mailErr && <p className="error" role="alert">{mailErr}</p>}
+          {sent && <p className="ok" role="status">Sent to {sent}. It can take a few minutes. Check your spam or junk folder if you don't see it.</p>}
+          <button className="btn big" disabled={sending || !/^\S+@\S+\.\S+$/.test(emailValue)}>
+            {sending ? 'Sending…' : 'Email my form'}
+          </button>
+        </form>
+      </section>
 
       <section className="card">
         <h2>What to do next</h2>

@@ -6,7 +6,7 @@ import { admin, audit, handler, HttpError, json, readJson, requireOwnCase, requi
 const ROLE = ['payor', 'payee', 'unsure'];
 const TYPE = ['new', 'modification', 'enforcement', 'unsure'];
 const GOAL = ['fair', 'reduce', 'increase', 'understand'];
-const COLS = 'id,status,form_type,role,case_type,goal,county,confidentiality_requested,last_step,created_at,updated_at';
+const COLS = 'id,status,form_type,role,case_type,goal,county,confidentiality_requested,last_step,next_court_date,created_at,updated_at';
 const STEPS = ['setup', 'safety', 'documents', 'info', 'job', 'other-income', 'household', 'other-orders',
   'health', 'child-care', 'assets', 'expenses', 'debts', 'for-you', 'documents-final', 'review'];
 
@@ -38,6 +38,11 @@ export default handler('cases', async (req) => {
     if ('goal' in body) { if (body.goal !== null && !GOAL.includes(body.goal)) throw new HttpError(400); patch.goal = body.goal; }
     if ('county' in body) patch.county = body.county ? String(body.county).slice(0, 40) : null;
     if ('confidentiality_requested' in body) patch.confidentiality_requested = !!body.confidentiality_requested;
+    if ('next_court_date' in body) {
+      const v = body.next_court_date;
+      if (v !== null && !(typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v)))) throw new HttpError(400);
+      patch.next_court_date = v;
+    }
     if ('last_step' in body) {
       if (!STEPS.includes(body.last_step)) throw new HttpError(400);
       patch.last_step = body.last_step;

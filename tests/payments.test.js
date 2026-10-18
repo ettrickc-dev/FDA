@@ -2,12 +2,14 @@
 // function code with an in-memory database and a fake Stripe Checkout API.
 import { randomBytes } from 'node:crypto';
 import Stripe from 'stripe';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { aadFor, encrypt } from '../netlify/functions/_lib/crypto.js';
 import { __setAdmin } from '../netlify/functions/_lib/http.js';
 import { __setStripe } from '../netlify/functions/_lib/stripe.js';
 import checkout from '../netlify/functions/checkout.js';
 import download from '../netlify/functions/download.js';
+import emailForm from '../netlify/functions/email-form.js';
+import { vi } from 'vitest';
 import paywall from '../netlify/functions/paywall.js';
 import webhook from '../netlify/functions/stripe-webhook.js';
 import { buildChecklist } from '../src/lib/checklist.js';
@@ -220,3 +222,59 @@ describe('download', () => {
     expect(r.status).toBe(429);
   });
 });
+
+describe('email my form', () => {
+  const send = (body, token) => emailForm(req('/api/email-form', { method: 'POST', body: { caseId: CASE, ...body }, token }));
+  let fetchSpy;
+  beforeEach(() => {
+    process.env.RESEND_API_KEY = 're_test_dummy';
+    fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('{"id":"x"}', { status: 200 }));
+  });
+  afterEachCleanup();
+
+  it('refuses before payment and never calls the email service', async () => {
+    saveAnswers(CASE, readyAnswers());
+    const r = await js(await send({ email: 'me@example.com' }));
+    expect(r.status).toBeGreaterThanOrEqual(400);
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it('rejects a bad address and another user\'s case', async () => {
+    saveAnswers(CASE, readyAnswers());
+    await payViaWebhook();
+    expect((await send({ email: 'not-an-email' })).status).toBe(400);
+    expect((await send({ email: 'me@example.com' }, 'tok-other')).status).toBe(404);
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it('after payment, sends one PDF with neutral wording and logs no address', async () => {
+    saveAnswers(CASE, readyAnswers());
+    await payViaWebhook();
+    const r = await js(await send({ email: 'me@example.com' }));
+    expect(r.status).toBe(200);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    const [url, init] = fetchSpy.mock.calls[0];
+    expect(url).toBe('https://api.resend.com/emails');
+    const body = JSON.parse(init.body);
+    expect(body.to).toEqual(['me@example.com']);
+    expect(body.from).toMatch(/mail\.ettrickcampbell\.com/);
+    expect(`${body.subject} ${body.text}`).not.toMatch(/court|support|divorce|custody/i);
+    expect(Buffer.from(body.attachments[0].content, 'base64').subarray(0, 5).toString()).toBe('%PDF-');
+    expect(JSON.stringify(db.T('audit_log'))).not.toContain('me@example.com');
+    expect(db.T('audit_log').some((a) => a.action === 'email.final')).toBe(true);
+  });
+
+  it('gives a friendly message when email is not set up', async () => {
+    delete process.env.RESEND_API_KEY;
+    saveAnswers(CASE, readyAnswers());
+    await payViaWebhook();
+    const r = await js(await send({ email: 'me@example.com' }));
+    expect(r.status).toBe(503);
+    expect(r.body.error).toMatch(/Download/);
+  });
+});
+
+function afterEachCleanup() {
+  // eslint-disable-next-line no-undef
+  afterEach(() => { vi.restoreAllMocks(); delete process.env.RESEND_API_KEY; });
+}

@@ -15,6 +15,8 @@ import UnlockPage from './pages/UnlockPage.jsx';
 import SafetyPage from './pages/SafetyPage.jsx';
 import StepPage from './pages/StepPage.jsx';
 import Terms from './pages/Terms.jsx';
+import SaveProgress from './pages/SaveProgress.jsx';
+import ReadyList from './components/ReadyList.jsx';
 
 function Placeholder({ title }) {
   return (
@@ -50,6 +52,8 @@ export default function App() {
       <Route path="/delete-my-data" element={<DeleteMyData />} />
       <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="/terms-of-use" element={<TermsOfUse />} />
+      <Route path="/save-progress" element={<SaveProgress />} />
+      <Route path="/what-you-need" element={<Shell><h1>What you'll need</h1><ReadyList title="Checklist" showPrint /></Shell>} />
       <Route path="*" element={<Placeholder title="Page not found" />} />
     </Routes>
   );

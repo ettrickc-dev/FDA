@@ -47,6 +47,22 @@ export const EXPENSE_KEYS = [
   'child_care', 'school', 'food', 'clothing', 'medical', 'contributions', 'other',
 ];
 
+// "Your situation" asks for the next court date as YYYY-MM-DD; print it as e.g. "Nov 3, 2026".
+export function courtDateFromSetup(setup = {}) {
+  const v = t(setup?.next_court_date);
+  if (setup?.no_court_date || !/^\d{4}-\d{2}-\d{2}$/.test(v)) return '';
+  const [y, m, d] = v.split('-').map(Number);
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return `${MONTHS[m - 1]} ${d}, ${y}`;
+}
+
+// Gas and electric on one bill: print the combined amount on the Electric line and point the
+// Gas line to it, so nothing is counted twice.
+export function effectiveExpenses(e = {}) {
+  if (e.util_combined !== 'yes') return e;
+  return { ...e, util_electric: e.util_gas_electric, util_gas: '', util_gas_note: t(e.util_gas_electric) ? 'incl. in Electric' : '' };
+}
+
 export function buildFormModel(answers = {}) {
   const text = {};
   const checks = [];
@@ -59,7 +75,7 @@ export function buildFormModel(answers = {}) {
   const ci = answers.case_info || {};
   set('file_no', ci.file_no);
   set('docket_no', ci.docket_no);
-  set('court_date', ci.court_date);
+  set('court_date', t(ci.court_date) || courtDateFromSetup(answers.case_setup));
   set('name', ci.full_name);
   set('printed_name', ci.full_name);
   if (ci.party === 'petitioner') circles.push('party_petitioner');
@@ -183,8 +199,9 @@ export function buildFormModel(answers = {}) {
   }
 
   // ---- Monthly expenses ----
-  const e = answers.expenses || {};
+  const e = effectiveExpenses(answers.expenses || {});
   for (const k of EXPENSE_KEYS) set(`exp_${k}`, money(e[k]));
+  if (e.util_gas_note) set('exp_util_gas', e.util_gas_note);
   set('exp_util_other_label', e.util_other_label);
   set('exp_ins_other_label', e.ins_other_label);
   set('exp_other_label', e.other_label);

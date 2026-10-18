@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Shell from '../components/Shell.jsx';
 import { REFUND_SUMMARY } from '../content/afterPurchase.js';
 import { api } from '../lib/api.js';
+import { isGuest, useSessionUser } from '../lib/session.js';
 
 export const formatPrice = (cents) =>
   cents === null || cents === undefined ? '[price not set]'
@@ -16,6 +17,7 @@ export default function UnlockPage() {
   const [info, setInfo] = useState(null);
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState(false);
+  const sessionUser = useSessionUser();
 
   useEffect(() => {
     api.paywall(id).then((r) => {
@@ -33,6 +35,7 @@ export default function UnlockPage() {
     } catch (e) { setErr(e.message); setBusy(false); }
   }
 
+  const guest = isGuest(sessionUser);
   if (err && !info) return <Shell><p className="error" role="alert">{err}</p></Shell>;
   if (!info) return <Shell><p>Loading…</p></Shell>;
   const days = info.accessDays ?? '[N]';
@@ -40,6 +43,12 @@ export default function UnlockPage() {
   return (
     <Shell>
       <h1>Unlock your final form</h1>
+      {guest && (
+        <div className="notice caution" role="note">
+          <p>You're using a guest session. If you close this tab, you can't come back to your form. Before you pay, tap "Save my progress" to add your email, or plan to download or email your form right after paying.</p>
+          <button type="button" className="btn" onClick={() => nav('/save-progress', { state: { back: `/case/${id}/unlock` } })}>Save my progress</button>
+        </div>
+      )}
       {info.access.state === 'expired' && (
         <p className="notice">Your earlier access period has ended. You can unlock again to download an updated form.</p>
       )}

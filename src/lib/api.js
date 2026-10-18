@@ -1,3 +1,4 @@
+import { rememberCourtDate } from './courtDate.js';
 import { supabase } from './supabase.js';
 
 async function call(path, { method = 'GET', body } = {}) {
@@ -26,13 +27,18 @@ export const api = {
     call('/api/consent', { method: 'POST', body: { termsVersion, acceptedAt } }),
   listCases: () => call('/api/cases'),
   createCase: () => call('/api/cases', { method: 'POST' }),
-  updateCase: (id, patch) => call('/api/cases', { method: 'PATCH', body: { id, ...patch } }),
+  updateCase: async (id, patch) => {
+    const out = await call('/api/cases', { method: 'PATCH', body: { id, ...patch } });
+    if ('next_court_date' in patch) rememberCourtDate(id, out?.case?.next_court_date ?? null);
+    return out;
+  },
   getAnswers: (caseId) => call(`/api/answers?case=${encodeURIComponent(caseId)}`),
   preview: (caseId) => call(`/api/preview?case=${encodeURIComponent(caseId)}`),
   deleteMyData: () => call('/api/delete-my-data', { method: 'POST', body: { confirm: 'DELETE' } }),
   paywall: (caseId) => call(`/api/paywall?case=${encodeURIComponent(caseId)}`),
   checkout: (caseId) => call('/api/checkout', { method: 'POST', body: { caseId } }),
   downloadLink: (caseId) => call('/api/download', { method: 'POST', body: { caseId } }),
+  emailForm: (caseId, email) => call('/api/email-form', { method: 'POST', body: { caseId, email } }),
   logFlag: (caseId, flagType, answer) =>
     call('/api/red-flags', { method: 'POST', body: { caseId, flagType, answer } }),
   flagAction: (caseId, id, userAction) =>

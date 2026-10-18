@@ -6,12 +6,24 @@ import { NY_COUNTIES } from '../config.js';
 
 const YES_NO = [{ value: 'yes', label: 'Yes' }, { value: 'no', label: 'No' }];
 
+// Why the form matters (FCA § 424-a). ATTORNEY TO REVIEW — checked against the statute Oct 2026.
+export const MANDATORY_NOTICE = [
+  'This form is required. Under Family Court Act § 424-a, both parents must give the court a sworn financial statement, a recent pay stub, and their latest tax returns. The court cannot waive this.',
+  'If the Respondent doesn\'t provide it without a good reason, the court must either grant what the petition asks for, or stop the Respondent from giving evidence about what they can afford to pay. If the Petitioner doesn\'t provide it, the court may postpone the case until it is filed.',
+  'It is a sworn statement, so take the time to get every answer right the first time.',
+];
+
 // ---------------- Case setup (user flow step 4) ----------------
 export const CASE_SETUP = {
   section: 'case_setup',
   title: 'About your situation',
-  intro: 'These questions help us show you information that fits your situation. They do not go on the form.',
+  intro: 'These questions help us show you information that fits your situation. Only your court date goes on the form.',
   fields: [
+    { type: 'notice', tone: 'caution', text: MANDATORY_NOTICE },
+    { type: 'date', name: 'next_court_date', label: 'When is your next court date?', optional: true,
+      hint: 'It is on the papers you got from the court. We\'ll show how many days you have left on every screen.',
+      showIf: (d) => !d.no_court_date },
+    { type: 'checkbox', name: 'no_court_date', label: 'I don\'t have a court date yet' },
     { type: 'radio', name: 'role', label: 'Are you paying child support or receiving it?',
       options: [
         { value: 'payor', label: 'Paying (or may be asked to pay)' },
@@ -42,7 +54,10 @@ export const CASE_SETUP = {
       ] },
   ],
   // Copy routing answers onto the case row (non-sensitive, used for recommendations).
-  casePatch: (d) => ({ role: d.role || null, case_type: d.case_type || null, goal: d.goal || null }),
+  casePatch: (d) => ({
+    role: d.role || null, case_type: d.case_type || null, goal: d.goal || null,
+    next_court_date: !d.no_court_date && /^\d{4}-\d{2}-\d{2}$/.test(d.next_court_date || '') ? d.next_court_date : null,
+  }),
 };
 
 // ---------------- Screen 1: Case info ----------------
@@ -62,7 +77,8 @@ export const CASE_INFO = {
     { type: 'text', name: 'file_no', label: 'File #', optional: true, maxLength: 40 },
     { type: 'text', name: 'docket_no', label: 'Docket #', optional: true, maxLength: 40 },
     { type: 'text', name: 'court_date', label: 'Next court date, time, and part', optional: true, maxLength: 80,
-      placeholder: 'e.g. Nov 3, 9:30 AM, Part 4' },
+      placeholder: 'e.g. Nov 3, 9:30 AM, Part 4',
+      hint: 'If you leave this blank, we\'ll use the court date from "Your situation".' },
     { type: 'heading', text: 'Your address' },
     { type: 'radio', name: 'confidential',
       label: 'Would sharing your home address with the other parent put your health, safety, or freedom at risk?',
@@ -200,8 +216,13 @@ export const HEALTH = {
     { type: 'text', name: 'plan_name', label: 'Insurance plan name', maxLength: 60, showIf: (d) => (d.coverage || []).some((c) => c !== 'none') },
     { type: 'text', name: 'policy_no', label: 'Policy #', maxLength: 40, showIf: (d) => (d.coverage || []).some((c) => c !== 'none') },
     { type: 'heading', text: 'What health insurance costs you' },
-    { type: 'moneyPeriod', name: 'family_cost', label: 'Cost of a family plan', optional: true, help: 'family_vs_individual' },
-    { type: 'moneyPeriod', name: 'individual_cost', label: 'Cost of an individual plan', optional: true },
+    { type: 'notice', text: [
+      'Enter only what YOU pay, not what your employer pays.',
+      'If it comes out of your paycheck, look on your pay stub for a line like "Medical," "Health," or "Dental," and enter that amount and how often you are paid. Example: 48 dollars taken out every 2 weeks.',
+      'If your job offers coverage you didn\'t sign up for, enter what it would cost you. Leave these blank if you have Medicaid or pay nothing.',
+    ] },
+    { type: 'moneyPeriod', name: 'family_cost', label: 'What you pay for a family plan (covers you and others)', optional: true, help: 'family_vs_individual' },
+    { type: 'moneyPeriod', name: 'individual_cost', label: 'What you pay for an individual plan (covers only you)', optional: true },
     { type: 'heading', text: 'Your children\'s coverage' },
     { type: 'checkboxes', name: 'children_covered_by', label: "The children's health insurance is covered by", help: 'children_coverage',
       options: [
@@ -294,7 +315,19 @@ const EXPENSE_LINES = [
   ['contributions', 'Contributions'],
   ['other', 'Other expense', 'other_label'],
 ];
-export const EXPENSE_FIELDS = EXPENSE_LINES.filter(([n]) => n !== 'heading').map(([n]) => n);
+export const EXPENSE_FIELDS = [...EXPENSE_LINES.filter(([n]) => n !== 'heading').map(([n]) => n), 'util_gas_electric'];
+
+// Gas and electric on one bill: count the combined line instead of the two separate ones.
+export const combinedUtilities = (d) => d?.util_combined === 'yes';
+export function activeExpenseFields(d) {
+  return EXPENSE_FIELDS.filter((n) => (combinedUtilities(d)
+    ? n !== 'util_gas' && n !== 'util_electric'
+    : n !== 'util_gas_electric'));
+}
+
+const EXPENSE_HINTS = {
+  health_insurance: 'Only what you pay yourself each month (from your paycheck or paid directly). Paid every week? Multiply by 4.33. Every 2 weeks? Multiply by 2.17. Twice a month? Multiply by 2. Enter 0 if you pay nothing.',
+};
 
 export const EXPENSES = {
   section: 'expenses',
@@ -306,11 +339,18 @@ export const EXPENSES = {
     ...EXPENSE_LINES.flatMap(([name, label, labelField]) => {
       if (name === 'heading') return [{ type: 'heading', text: label }];
       const out = [];
+      if (name === 'util_gas') {
+        out.push({ type: 'radio', name: 'util_combined', label: 'Do you get gas and electric on one bill?',
+          hint: 'For example, one Con Edison or National Grid bill for both.', options: YES_NO });
+        out.push({ type: 'money', name: 'util_gas_electric', label: 'Gas & electric, one bill (per month)', optional: true,
+          showIf: combinedUtilities });
+      }
       if (labelField) out.push({ type: 'text', name: labelField, label: `${label} — what is it?`, optional: true, maxLength: 24 });
-      out.push({ type: 'money', name, label: `${label} (per month)`, optional: !!labelField });
+      const hide = name === 'util_gas' || name === 'util_electric' ? { showIf: (d) => !combinedUtilities(d) } : {};
+      out.push({ type: 'money', name, label: `${label} (per month)`, optional: !!labelField, hint: EXPENSE_HINTS[name], ...hide });
       return out;
     }),
-    { type: 'total', name: 'total', label: 'Total monthly expenses', sumOf: EXPENSE_FIELDS },
+    { type: 'total', name: 'total', label: 'Total monthly expenses', sumOf: activeExpenseFields },
   ],
 };
 

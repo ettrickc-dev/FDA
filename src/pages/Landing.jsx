@@ -5,9 +5,11 @@
 //     the attorney who designed the tool. No fake counts, no countdowns, no guilt.
 //  3. Connection & purpose -> values (children, fairness) and sharing with other parents.
 import { Link } from 'react-router-dom';
+import ReadyList from '../components/ReadyList.jsx';
 import ShareTool from '../components/ShareTool.jsx';
 import Shell from '../components/Shell.jsx';
 import { ATTORNEY } from '../config.js';
+import { MANDATORY_NOTICE } from '../content/screens.js';
 
 export default function Landing() {
   return (
@@ -25,14 +27,21 @@ export default function Landing() {
         <li>Your answers are encrypted. No ads and no tracking.</li>
       </ul>
 
-      <section className="card">
-        <h2>The court asks every parent for this form</h2>
+      <section className="card mandatory-card">
+        <h2>This form is mandatory</h2>
         <p>
           The form itself says: "You are required to bring this form to Court. Fill it out before you
-          come in on the next court date." Filling it out carefully is not taking sides or being
-          difficult. It is what the court asks of both parents.
+          come in on the next court date."
+        </p>
+        {MANDATORY_NOTICE.map((t) => <p key={t}>{t}</p>)}
+        <p>
+          Filling it out carefully is not taking sides or being difficult. It is what the court asks of
+          both parents.
         </p>
       </section>
+
+      <ReadyList />
+      <p className="center"><a href="/what-you-need">Open a printable copy of this list</a></p>
 
       <section className="card">
         <h2>Calm, private, and at your pace</h2>
